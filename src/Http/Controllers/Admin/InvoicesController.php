@@ -1,4 +1,5 @@
 <?php
+
 namespace MicroweberPackages\Invoice\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
@@ -14,14 +15,11 @@ use Carbon\Carbon;
 use MicroweberPackages\Invoice\Item;
 use MicroweberPackages\Invoice\Mail\InvoicePdf;
 use MicroweberPackages\App\Http\Controllers\AdminController;
-use function MongoDB\BSON\toJSON;
-use Illuminate\Support\Facades\Log;
 use Mailgun\Mailgun;
 use PDF;
 use Validator;
 use MicroweberPackages\Invoice\TaxType;
 use MicroweberPackages\Invoice\Tax;
-use MicroweberPackages\Page\Http\Requests\PageRequest;
 
 class InvoicesController extends AdminController
 {
@@ -58,13 +56,13 @@ class InvoicesController extends AdminController
         $currencies = Currency::first();
         if (!$currencies) {
             Currency::create([
-               'name'=>'USD',
-               'code'=>'USD',
-               'symbol'=>'$',
-               'precision'=>'2',
-               'thousand_separator'=>',',
-               'decimal_separator'=>'.',
-               'swap_currency_symbol'=>0,
+                'name' => 'USD',
+                'code' => 'USD',
+                'symbol' => '$',
+                'precision' => '2',
+                'thousand_separator' => ',',
+                'decimal_separator' => '.',
+                'swap_currency_symbol' => 0,
             ]);
         }
 
@@ -89,7 +87,7 @@ class InvoicesController extends AdminController
             ->paginate($limit);
 
         return $this->view('invoice::admin.invoices.index', [
-            'customers'=> Customer::all(),
+            'customers' => Customer::all(),
             'invoices' => $invoices,
             'invoiceTotalCount' => Invoice::count()
         ]);
@@ -100,11 +98,15 @@ class InvoicesController extends AdminController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create()
     {
-        $tax_per_item = CompanySetting::getSetting('tax_per_item', $request->header('company'));
-        $discount_per_item = CompanySetting::getSetting('discount_per_item', $request->header('company'));
-        $invoice_num_auto_generate = CompanySetting::getSetting('invoice_auto_generate', $request->header('company'));
+        /*  $tax_per_item = CompanySetting::getSetting('tax_per_item', $request->header('company'));
+          $discount_per_item = CompanySetting::getSetting('discount_per_item', $request->header('company'));
+          $invoice_num_auto_generate = CompanySetting::getSetting('invoice_auto_generate', $request->header('company'));*/
+
+        $tax_per_item = 0.0;
+        $discount_per_item = 0.0;
+        $invoice_num_auto_generate = 1;
 
         $invoice_prefix = get_option('invoice_prefix', 'shop');
         if (empty($invoice_prefix)) {
@@ -119,10 +121,10 @@ class InvoicesController extends AdminController
         }
 
         return $this->view('invoice::admin.invoices.edit', [
-            'taxTypes'=>\MicroweberPackages\Tax\TaxType::all(),
+            'taxTypes' => \MicroweberPackages\Tax\TaxType::all(),
             'customers' => Customer::all(),
             'nextInvoiceNumberAttribute' => $nextInvoiceNumberAttribute,
-            'nextInvoiceNumber' => $invoice_prefix.'-'.$nextInvoiceNumber,
+            'nextInvoiceNumber' => $invoice_prefix . '-' . $nextInvoiceNumber,
             'items' => Item::with('taxes')->get(), // ->whereCompany($request->header('company')
             'invoiceTemplates' => InvoiceTemplate::all(),
             'tax_per_item' => $tax_per_item,
@@ -137,10 +139,10 @@ class InvoicesController extends AdminController
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(PageRequest $request)
+    public function store(Request $request)
     {
-        $invoice_number = explode("-",$request->invoice_number);
-        $number_attributes['invoice_number'] = $invoice_number[0].'-'.sprintf('%06d', intval($invoice_number[1]));
+        $invoice_number = explode("-", $request->invoice_number);
+        $number_attributes['invoice_number'] = $invoice_number[0] . '-' . sprintf('%06d', intval($invoice_number[1]));
 
         Validator::make($number_attributes, [
             'invoice_number' => 'required|unique:invoices,invoice_number'
@@ -259,7 +261,7 @@ class InvoicesController extends AdminController
      * @param  int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Request $request,$id)
+    public function edit(Requests\InvoicesRequest $request, $id)
     {
         $invoice = Invoice::with([
             'items',
@@ -271,13 +273,13 @@ class InvoicesController extends AdminController
 
         return $this->view('invoice::admin.invoices.edit', [
             'customers' => Customer::all(),
-            'taxTypes'=>\MicroweberPackages\Tax\TaxType::all(),
+            'taxTypes' => \MicroweberPackages\Tax\TaxType::all(),
             'nextInvoiceNumber' => $invoice->getInvoiceNumAttribute(),
             'invoice' => $invoice,
             'invoiceTemplates' => InvoiceTemplate::all(),
             'tax_per_item' => $invoice->tax_per_item,
             'discount_per_item' => $invoice->discount_per_item,
-            'shareable_link' => url('/invoices/pdf/'.$invoice->unique_hash),
+            'shareable_link' => url('/invoices/pdf/' . $invoice->unique_hash),
             'invoice_prefix' => $invoice->getInvoicePrefixAttribute()
         ]);
     }
@@ -289,14 +291,14 @@ class InvoicesController extends AdminController
      * @param  int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Requests\PageRequest $request, $id)
+    public function update(Requests\InvoicesRequest $request, $id)
     {
-        $invoice_number = explode("-",$request->invoice_number);
-        $number_attributes['invoice_number'] = $invoice_number[0].'-'.sprintf('%06d', intval($invoice_number[1]));
+        $invoice_number = explode("-", $request->invoice_number);
+        $number_attributes['invoice_number'] = $invoice_number[0] . '-' . sprintf('%06d', intval($invoice_number[1]));
         $number_attributes['invoice_number'] = trim($number_attributes['invoice_number']);
 
-            Validator::make($number_attributes, [
-            'invoice_number' => 'required|unique:invoices,invoice_number'.','.$id
+        Validator::make($number_attributes, [
+            'invoice_number' => 'required|unique:invoices,invoice_number' . ',' . $id
         ])->validate();
 
         $invoice_date = Carbon::createFromFormat('Y-m-d', $request->invoice_date);
@@ -327,7 +329,7 @@ class InvoicesController extends AdminController
 
         $invoice->invoice_date = $invoice_date;
         $invoice->due_date = $due_date;
-        $invoice->invoice_number =  $number_attributes['invoice_number'];
+        $invoice->invoice_number = $number_attributes['invoice_number'];
         $invoice->reference_number = $request->reference_number;
         $invoice->customer_id = $request->customer_id;
         $invoice->invoice_template_id = $request->invoice_template_id;
@@ -413,15 +415,14 @@ class InvoicesController extends AdminController
         }
 
         if (!empty($cantBeDeleted)) {
-            return ['status'=>'danger', 'message'=> count($cantBeDeleted) . ' invoices has attached with payments and can\'t be deleted.'];
+            return ['status' => 'danger', 'message' => count($cantBeDeleted) . ' invoices has attached with payments and can\'t be deleted.'];
         }
 
-        return ['status'=>'success', 'message'=> 'Invoice is deleted.'];
+        return ['status' => 'success', 'message' => 'Invoice is deleted.'];
     }
 
 
-
-     /**
+    /**
      * Mail a specific invoice to the correponding cusitomer's email address.
      *
      * @param  \Illuminate\Http\Request $request
@@ -454,7 +455,7 @@ class InvoicesController extends AdminController
     }
 
 
-     /**
+    /**
      * Mark a specific invoice as sent.
      *
      * @param  \Illuminate\Http\Request $request
@@ -471,7 +472,7 @@ class InvoicesController extends AdminController
     }
 
 
-     /**
+    /**
      * Mark a specific invoice as paid.
      *
      * @param  \Illuminate\Http\Request $request
@@ -489,7 +490,7 @@ class InvoicesController extends AdminController
     }
 
 
-     /**
+    /**
      * Retrive a specified user's unpaid invoices from storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -516,7 +517,7 @@ class InvoicesController extends AdminController
             'invoiceTemplate',
             'taxes.taxType'
         ])
-        ->find($request->id);
+            ->find($request->id);
 
         $date = Carbon::now();
         $invoice_prefix = get_option('invoice_prefix', 'shop');
@@ -528,7 +529,7 @@ class InvoicesController extends AdminController
         $invoice = Invoice::create([
             'invoice_date' => $date,
             'due_date' => $date,
-            'invoice_number' => $invoice_prefix."-".Invoice::getNextInvoiceNumber($invoice_prefix),
+            'invoice_number' => $invoice_prefix . "-" . Invoice::getNextInvoiceNumber($invoice_prefix),
             'reference_number' => $oldInvoice->reference_number,
             'customer_id' => $oldInvoice->customer_id,
             'company_id' => $request->header('company'),
