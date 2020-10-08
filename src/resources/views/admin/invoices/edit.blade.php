@@ -96,6 +96,7 @@
 
                 $('.js-invoice-discount-val-input').val(this.discountVal.toFixed(2));
                 $('.js-invoice-total-input').val(this.total.toFixed(2));
+                $('.js-invoice-total-text').html(this.total.toFixed(2));
                 $('.js-invoice-sub-total-input').val(this.subTotal.toFixed(2));
             }
 
@@ -344,7 +345,8 @@
 
                 <div class="form-group">
                     <label class="control-label">Total:</label>
-                    <input type="text" name="total" disabled="disabled" class="form-control js-invoice-total-input" value="0.00"/>
+                    <span class="js-invoice-total-text">0.00</span>
+                    <input type="hidden" name="total" class="js-invoice-total-input" value="0.00"/>
                 </div>
             </div>
 
