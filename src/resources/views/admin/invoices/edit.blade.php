@@ -170,7 +170,7 @@
         });
     </script>
 
-    <form method="post" action="@if(isset($invoice) && $invoice){{route('invoices.update', $invoice->id)}}@else{{route('invoices.store')}}@endif">
+    <form method="post" action="@if(isset($invoice) && $invoice){{route('admin.invoices.update', $invoice->id)}}@else{{route('admin.invoices.store')}}@endif">
         @csrf
 
         @if(isset($invoice) && $invoice)
