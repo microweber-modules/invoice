@@ -293,7 +293,7 @@
 
                 <select class="selectpicker" name="invoice_template_id" data-live-search="true">
                     @foreach($invoiceTemplates as $invoiceTemplate):
-                    <option value="{{ $invoiceTemplate->id }}" data-content="<div class='select-products'><div class='image'><img src='{{$invoiceTemplate->path}}' height='50' /></div><div class='info'><span class='title' style='padding-top:15px'>{{ $invoiceTemplate->name }}</span></div></div>"></option>
+                    <option value="{{ $invoiceTemplate->id }}" data-content="<div class='select-products'><div class='image'><img src='{{module_url('invoice')}}{{ $invoiceTemplate->path}}' height='50' /></div><div class='info'><span class='title' style='padding-top:15px'>{{ $invoiceTemplate->name }}</span></div></div>"></option>
                     @endforeach
                 </select>
 
