@@ -224,7 +224,7 @@ class InvoicesController extends AdminController
             \Mail::to($email)->send(new InvoicePdf($data));
         }
 
-        return redirect(route('invoices.index'))->with('status', 'Invoice is created success.');
+        return redirect(route('admin.invoices.index'))->with('status', 'Invoice is created success.');
     }
 
     /**
@@ -244,7 +244,7 @@ class InvoicesController extends AdminController
         ])->find($id);
 
         if (!$invoice) {
-            return redirect(route('invoices.index'))->with('status_danger', 'Invoice not found.');
+            return redirect(route('admin.invoices.index'))->with('status_danger', 'Invoice not found.');
         }
 
         $siteData = [
@@ -320,7 +320,7 @@ class InvoicesController extends AdminController
             $invoice->paid_status = Invoice::STATUS_PAID;
         } elseif ($invoice->due_amount < 0 && $invoice->paid_status != Invoice::STATUS_UNPAID) {
 
-            return redirect(route('invoices.index'))->with('status', 'Invalid invoice due amount.');
+            return redirect(route('admin.invoices.index'))->with('status', 'Invalid invoice due amount.');
 
         } elseif ($invoice->due_amount != 0 && $invoice->paid_status == Invoice::STATUS_PAID) {
             $invoice->status = $invoice->getPreviousStatus();
@@ -377,7 +377,7 @@ class InvoicesController extends AdminController
             }
         }
 
-        return redirect(route('invoices.index'));
+        return redirect(route('admin.invoices.index'));
     }
 
     /**
@@ -392,12 +392,12 @@ class InvoicesController extends AdminController
 
         if ($invoice && $invoice->payments()->exists() && $invoice->payments()->count() > 0) {
             // Payment attached
-            return redirect(route('invoices.index'))->with('status', 'Invoice has attached payments.');
+            return redirect(route('admin.invoices.index'))->with('status', 'Invoice has attached payments.');
         }
 
         $invoice = Invoice::destroy($id);
 
-        return redirect(route('invoices.index'))->with('status', 'Invoice is deleted.');
+        return redirect(route('admin.invoices.index'))->with('status', 'Invoice is deleted.');
     }
 
     public function delete(Request $request)
@@ -468,7 +468,7 @@ class InvoicesController extends AdminController
         $invoice->sent = true;
         $invoice->save();
 
-        return redirect(route('invoices.index'))->with('status', 'Invoice is marked as sent.');
+        return redirect(route('admin.invoices.index'))->with('status', 'Invoice is marked as sent.');
     }
 
 
@@ -486,7 +486,7 @@ class InvoicesController extends AdminController
         $invoice->due_amount = 0;
         $invoice->save();
 
-        return redirect(route('invoices.index'))->with('status', 'Invoice is marked as paid.');
+        return redirect(route('admin.invoices.index'))->with('status', 'Invoice is marked as paid.');
     }
 
 

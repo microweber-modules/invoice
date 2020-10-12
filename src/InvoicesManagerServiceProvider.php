@@ -16,19 +16,11 @@ use Illuminate\Support\ServiceProvider;
 
 class InvoicesManagerServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
-    }
-
     public function boot()
     {
         View::addNamespace('invoice', __DIR__.'/resources/views');
+
         $this->loadMigrationsFrom(__DIR__ . '/database/');
+        $this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
     }
 }

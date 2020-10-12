@@ -1,5 +1,5 @@
 <?php
-$redirectLink = route('invoices.index');
+$redirectLink = route('admin.invoices.index');
 ?>
 
 <script>

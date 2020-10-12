@@ -8,4 +8,6 @@ $config['ui_admin'] = true;
 $config['categories'] = "other";
 $config['position'] = 3;
 $config['version'] = 1;
-$config['service_provider'] = \MicroweberPackages\Invoice\InvoicesManagerServiceProvider::class;
+$config['settings']['service_provider'] = [
+    \MicroweberPackages\Invoice\InvoicesManagerServiceProvider::class
+];

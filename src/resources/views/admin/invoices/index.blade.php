@@ -73,7 +73,7 @@
 
                 <div class="col-auto">
                     @if(request()->get('filter') == 'true')
-                        <a href="{{route('invoices.index')}}" class="btn btn-outline-primary icon-left btn-md"><i class="mdi mdi-close"></i> Filter</a>
+                        <a href="{{route('admin.invoices.index')}}" class="btn btn-outline-primary icon-left btn-md"><i class="mdi mdi-close"></i> Filter</a>
                     @else
                         <button type="button" data-toggle="collapse" data-target="#show-filter" class="btn btn-outline-primary icon-left btn-md js-show-filter"><i class="mdi mdi-filter-outline"></i> Filter</button>
                     @endif
