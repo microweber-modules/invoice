@@ -16,7 +16,7 @@ use Illuminate\Support\ServiceProvider;
 
 class InvoicesManagerServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function register()
     {
         View::addNamespace('invoice', __DIR__.'/resources/views');
 

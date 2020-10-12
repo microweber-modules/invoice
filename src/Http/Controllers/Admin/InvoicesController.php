@@ -3,10 +3,10 @@
 namespace MicroweberPackages\Invoice\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use MicroweberPackages\Customer\Models\Customer;
 use MicroweberPackages\Invoice\CompanySetting;
 use MicroweberPackages\Invoice\Company;
 use MicroweberPackages\Currency\Currency;
-use MicroweberPackages\Customer\Customer;
 use MicroweberPackages\Invoice\InvoiceTemplate;
 use MicroweberPackages\Invoice\Http\Requests;
 use MicroweberPackages\Invoice\Invoice;

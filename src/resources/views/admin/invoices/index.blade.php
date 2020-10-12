@@ -42,7 +42,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: '{{ route('invoices.delete') }}',
+                    url: '{{ route('admin.invoices.delete') }}',
                     data: {id: id},
                     success: function (data) {
                         if (data.status == 'success') {
@@ -77,7 +77,7 @@
                     @else
                         <button type="button" data-toggle="collapse" data-target="#show-filter" class="btn btn-outline-primary icon-left btn-md js-show-filter"><i class="mdi mdi-filter-outline"></i> Filter</button>
                     @endif
-                    <a href="{{ route('invoices.create') }}" class="btn btn-primary icon-left"><i class="mdi mdi-plus"></i> New Invoice</a>
+                    <a href="{{ route('admin.invoices.create') }}" class="btn btn-primary icon-left"><i class="mdi mdi-plus"></i> New Invoice</a>
                 </div>
             </div>
 
@@ -207,17 +207,17 @@
                                 Action
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="{{ route('invoices.edit', $invoice->id) }}"><i class="fa fa-pen"></i> &nbsp; Edit</a>
-                                <a class="dropdown-item" href="{{ route('invoices.show', $invoice->id) }}"><i class="fa fa-eye"></i> &nbsp; View</a>
-                                <a class="dropdown-item" href="{{ route('invoices.send', $invoice->id) }}"><i class="fa fa-envelope"></i> &nbsp; Resend Invocie</a>
+                                <a class="dropdown-item" href="{{ route('admin.invoices.edit', $invoice->id) }}"><i class="fa fa-pen"></i> &nbsp; Edit</a>
+                                <a class="dropdown-item" href="{{ route('admin.invoices.show', $invoice->id) }}"><i class="fa fa-eye"></i> &nbsp; View</a>
+                                <a class="dropdown-item" href="{{ route('admin.invoices.send', $invoice->id) }}"><i class="fa fa-envelope"></i> &nbsp; Resend Invocie</a>
 
-                                <a href="{{ route('payments.create') }}?invoice_id={{$invoice->id}}&amount={{$invoice->due_amount}}" class="dropdown-item"><i class="fa fa-credit-card"></i> &nbsp; Record Payment</a>
+                                <a href="{{ route('admin.payments.create') }}?invoice_id={{$invoice->id}}&amount={{$invoice->due_amount}}" class="dropdown-item"><i class="fa fa-credit-card"></i> &nbsp; Record Payment</a>
 
-                                <form method="post" action="{{ route('invoices.clone') }}">
+                                <form method="post" action="{{ route('admin.invoices.clone') }}">
                                     <input type="hidden" value="{{ $invoice->id }}" name="id">
                                     <button type="submit" class="dropdown-item"><i class="fa fa-copy"></i> &nbsp; Clone Invoice</button>
                                 </form>
-                                <form action="{{ route('invoices.destroy', $invoice->id)}}" method="post">
+                                <form action="{{ route('admin.invoices.destroy', $invoice->id)}}" method="post">
                                     @csrf
                                     @method('DELETE')
                                     <button class="dropdown-item"><i class="fa fa-times"></i> Delete</button>
@@ -238,7 +238,7 @@
                     <p>You have no invoices issued yet.<br/>
                         All your invoices will appear here soon</p>
                     <br/>
-                    <a href="{{ route('invoices.create') }}" class="btn btn-primary btn-rounded">Add new invoice</a>
+                    <a href="{{ route('admin.invoices.create') }}" class="btn btn-primary btn-rounded">Add new invoice</a>
                 </div>
             </div>
         </div>

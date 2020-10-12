@@ -15,8 +15,7 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->get('/invoices/pd
 ]);
 
 Route::prefix('admin')->name('admin.')->namespace('\MicroweberPackages\Invoice\Http\Controllers\Admin')->group(function () {
-
-    Route::post('/invoices/delete', [
+     Route::post('/invoices/delete', [
         'as' => 'invoices.delete',
         'uses' => 'InvoicesController@delete'
     ]);
